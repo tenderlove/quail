@@ -23,10 +23,25 @@ static VALUE create_handle(VALUE self, VALUE host)
   return self;
 }
 
+static VALUE receive(VALUE self)
+{
+  void * handle;
+  void * buf;
+  size_t size;
+  czmq_free_fn *ffn;
+
+  Data_Get_Struct(rb_iv_get(self, "@handle"), void, handle);
+  czmq_receive(handle, &buf, &size, &ffn);
+  if(ffn) ffn(buf);
+
+  return rb_str_new((char *)buf, size);
+}
+
 void Init_Quail_Handle(VALUE mQuail)
 {
   VALUE cQuailHandle = rb_define_class_under(mQuail, "Handle", rb_cObject);
   rb_define_private_method(cQuailHandle, "create_handle", create_handle, 1);
   rb_define_private_method(cQuailHandle, "destroy_handle", destroy_handle, 0);
   rb_define_private_method(cQuailHandle, "native_bind", native_bind, 2);
+  rb_define_method(cQuailHandle, "receive", receive, 0);
 }

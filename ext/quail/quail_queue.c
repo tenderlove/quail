@@ -8,9 +8,14 @@ static VALUE create_queue(  VALUE self,
 {
   void * handle;
   Data_Get_Struct(rb_h, void, handle);
+
+  int native_scope = NUM2INT(scope);
+  char * chr_address = native_scope == CZMQ_SCOPE_LOCAL ?
+    NULL : StringValuePtr(address);
+
   czmq_create_queue(  handle, 
                       StringValuePtr(name),
-                      NUM2INT(scope),
+                      native_scope,
                       StringValuePtr(address)
   );
 }

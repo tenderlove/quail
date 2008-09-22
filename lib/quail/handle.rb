@@ -31,7 +31,7 @@ module Quail
 
     def bind exchange, queue
       raise "not started" unless @started
-      native_bind(exchange.name, queue.name)
+      native_bind(exchange, queue)
     end
   end
 end

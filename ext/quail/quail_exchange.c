@@ -8,12 +8,16 @@ static VALUE create_exchange( VALUE self,
 {
   void * handle;
   int eid;
+  int native_scope = NUM2INT(scope);
+
+  char * chr_address = native_scope == CZMQ_SCOPE_LOCAL ?
+    NULL : StringValuePtr(address);
 
   Data_Get_Struct(rb_h, void, handle);
   eid = czmq_create_exchange( handle, 
                               StringValuePtr(name),
-                              NUM2INT(scope),
-                              StringValuePtr(address) );
+                              native_scope,
+                              chr_address );
   return INT2NUM(eid);
 }
 
