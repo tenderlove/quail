@@ -8,4 +8,5 @@ void Init_native()
 
   Init_Quail_Handle(mQuail);
   Init_Quail_Exchange(mQuail);
+  Init_Quail_Queue(mQuail);
 }
