@@ -5,10 +5,12 @@ module Quail
     def initialize  handle,
                     exchange_name = 'E',
                     scope = Quail::GLOBAL,
-                    address = '127.0.0.1:5000'
+                    address = '127.0.0.1:5555'
+
+      raise unless handle.started?
+      @handle = handle.handle
       @name = exchange_name
-      @handle = handle
-      @eid = create_exchange(handle, exchange_name, scope, address)
+      @eid = create_exchange(@handle, exchange_name, scope, address)
     end
   end
 end

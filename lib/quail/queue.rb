@@ -5,11 +5,12 @@ module Quail
     def initialize  handle,
                     name    = 'Q',
                     scope   = Quail::GLOBAL,
-                    address = '127.0.0.1:5001'
+                    address = '127.0.0.1:5556'
 
-      @handle = handle
+      raise unless handle.started?
+      @handle = handle.handle
       @name = name
-      create_queue(handle, name, scope, address)
+      create_queue(@handle, name, scope, address)
     end
   end
 end

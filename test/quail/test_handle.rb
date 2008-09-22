@@ -7,5 +7,13 @@ module Quail
         Quail::Handle.new('localhost.local')
       }
     end
+
+    def test_bind
+      Quail::Handle.start('localhost') do |handle|
+        exchange = Quail::Exchange.new(handle)
+        queue = Quail::Queue.new(handle)
+        handle.bind(exchange, queue)
+      end
+    end
   end
 end
