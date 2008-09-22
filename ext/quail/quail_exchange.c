@@ -17,8 +17,21 @@ static VALUE create_exchange( VALUE self,
   return INT2NUM(eid);
 }
 
+static VALUE send(VALUE self, VALUE message)
+{
+  void * handle;
+
+  VALUE length  = rb_funcall(message, rb_intern("length"), 0);
+  VALUE rb_h    = rb_iv_get(self, "@handle");
+  VALUE eid     = rb_iv_get(self, "@eid");
+  Data_Get_Struct(rb_h, void, handle);
+  czmq_send(handle, NUM2INT(eid), StringValuePtr(message), NUM2INT(length), 0);
+  return message;
+}
+
 void Init_Quail_Exchange(VALUE mQuail)
 {
   VALUE cQuailHandle = rb_define_class_under(mQuail, "Exchange", rb_cObject);
   rb_define_private_method(cQuailHandle, "create_exchange", create_exchange, 4);
+  rb_define_method(cQuailHandle, "send", send, 1);
 }
