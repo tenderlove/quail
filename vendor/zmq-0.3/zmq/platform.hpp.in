@@ -1,0 +1,12 @@
+/* Have Linux OS */
+#undef ZMQ_HAVE_LINUX
+
+/* Have DarwinOSX OS */
+#undef ZMQ_HAVE_OSX
+
+/* Have Solaris OS */
+#undef ZMQ_HAVE_SOLARIS
+
+/* Have FreeBSD OS */
+#undef ZMQ_HAVE_FREEBSD
+

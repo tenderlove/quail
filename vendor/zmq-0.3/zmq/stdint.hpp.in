@@ -1,0 +1,12 @@
+/* Define to 1 if you have the <stdint.h> header file. */
+#define ZMQ_HAVE_STDINT_H @stdint@
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#define ZMQ_HAVE_INTTYPES_H @inttypes@
+
+#if ZMQ_HAVE_STDINT_H
+    #include <stdint.h>
+#elif ZMQ_HAVE_INTTYPES_H
+    #include <inttypes.h>
+#endif
+

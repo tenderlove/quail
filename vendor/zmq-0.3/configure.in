@@ -1,0 +1,198 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.61)
+AC_INIT([zmq],[0.3])
+AC_CONFIG_AUX_DIR(config)
+AM_CONFIG_HEADER(zmq/config.h)
+AM_CONFIG_HEADER(zmq/platform.hpp)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_LIBTOOL
+
+# Checks for libraries.
+AC_CHECK_LIB(pthread, pthread_create)
+
+# Host speciffic checks
+AC_CANONICAL_HOST
+case "${host_os}" in
+    *linux*)
+        AC_DEFINE(ZMQ_HAVE_LINUX, 1, [Have Linux OS])
+        CPPFLAGS="-D_REENTRANT $CPPFLAGS"
+        ;;
+    *solaris*)
+        AC_DEFINE(ZMQ_HAVE_SOLARIS, 1, [Have Solaris OS])
+        AC_CHECK_LIB(socket, main)
+        AC_CHECK_LIB(nsl, main)
+        AC_CHECK_LIB(rt, main)
+        CPPFLAGS="-D_REENTRANT -D_PTHREADS $CPPFLAGS"
+        ;;
+    *freebsd*)
+        AC_DEFINE(ZMQ_HAVE_FREEBSD, 1, [Have FreeBSD OS])
+        CPPFLAGS="-D_THREAD_SAFE $CPPFLAGS"
+        LIBS="-pthread"
+        ;;
+    *darwin*)
+        AC_DEFINE(ZMQ_HAVE_OSX, 1, [Have DarwinOSX OS])
+        LIBS="-pthread"
+        ;;
+    *)
+        AC_MSG_ERROR([Not supported os: $host.])
+        ;;
+esac
+
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(stdint.h, HAVE_STDINT_H="yes", HAVE_STDINT_H="no")
+AC_CHECK_HEADERS(inttypes.h, HAVE_INTTYPES_H="yes", HAVE_INTTYPES_H="no")
+AC_CHECK_HEADERS(errno.h arpa/inet.h netinet/tcp.h netinet/in.h stddef.h stdlib.h string.h sys/socket.h sys/time.h unistd.h limits.h)
+
+# Use c++ in subsequent tests
+AC_LANG(C++)
+
+# Optional stuff
+AC_ARG_WITH([perf], [AS_HELP_STRING([--with-perf], [build performance tests [default=no]])], [], [with_perf=no])
+perf="no"
+cpu_estimator="no"
+time_measure="gettime"
+
+# performance measuring framework (perf)
+if test "x$with_perf" != "xno"; then
+    perf="yes"
+
+    # Test for __GNUC__ && (__i386__ || __x86_64__) macros
+    AC_MSG_CHECKING([wheter rtdsc can be used])
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+        [[#if (defined (__GNUC__) && (defined (__i386__) || defined (__x86_64__)))
+            //OK we can use rtdsc
+          #else
+            error: we can not use rtdsc
+          #endif
+        ]])],
+            [rtdsc=yes],
+            [rtdsc=no])
+    AC_MSG_RESULT([$rtdsc])
+
+    # To built cpu frequency estimator we need librt && rtdsc
+    if test "x$rtdsc" = "xyes"; then
+        cpu_estimator="yes"
+    fi
+
+    # Test for PERF_CPU_FREQUENCY macro
+    AC_MSG_CHECKING([wheter PERF_CPU_FREQUENCY is defined])
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+        [[#ifdef PERF_CPU_FREQUENCY
+            //OK
+          #else
+            error: PERF_CPU_FREQUENCY is not defined
+          #endif
+        ]])],
+            [perf_cpu_freq=yes],
+            [perf_cpu_freq=no])
+    AC_MSG_RESULT([$perf_cpu_freq])
+
+    if test "x$perf_cpu_freq" = "xyes" -a "x$rtdsc" = "xyes"; then
+        time_measure="rtdsc"
+    fi
+
+fi
+
+# Camera example
+camera="no"
+AC_ARG_WITH([camera], [AS_HELP_STRING([--with-camera], [build camera example [default=no]])], [], [with_camera=no])
+if test "x$with_camera" != "xno"; then
+
+    PKG_CHECK_MODULES([SDL], [sdl]) 
+    AC_SUBST(SDL_LIBS)
+    AC_SUBST(SDL_CFLAGS)
+
+    PKG_CHECK_MODULES([UNICAP], [libunicap]) 
+    AC_SUBST(UNICAP_LIBS)
+    AC_SUBST(UNICAP_CFLAGS)
+
+    PKG_CHECK_MODULES([UCIL], [libucil]) 
+    AC_SUBST(UCIL_LIBS)
+    AC_SUBST(UCIL_CFLAGS)
+
+    camera="yes"
+fi
+
+# Exchange example
+AC_ARG_WITH([exchange], [AS_HELP_STRING([--with-exchange], [build exchange example [default=no]])], [], [with_exchange=no])
+exchange="no"
+if test "x$with_exchange" != "xno"; then
+    exchange="yes"
+fi
+
+# Chat example
+AC_ARG_WITH([chat], [AS_HELP_STRING([--with-chat], [build chatroom example [default=no]])], [], [with_chat=no])
+chat="no"
+if test "x$with_chat" != "xno"; then
+    chat="yes"
+fi
+
+
+AM_CONDITIONAL(BUILD_PERF, test "x$perf" = "xyes") 
+AM_CONDITIONAL(BUILD_CAMERA, test "x$camera" = "xyes") 
+AM_CONDITIONAL(BUILD_EXCHANGE, test "x$exchange" = "xyes")
+AM_CONDITIONAL(BUILD_CPU_ESTIMATOR, test "x$cpu_estimator" = "xyes")
+AM_CONDITIONAL(BUILD_CHAT, test "x$chat" = "xyes")
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
+AC_HEADER_TIME
+AC_TYPE_UINT32_T
+AC_C_VOLATILE
+
+# Substs
+stdint="0"
+if test "x$HAVE_STDINT_H" = "xyes"; then
+    stdint="1"
+fi
+
+inttypes="0"
+if test "x$HAVE_INTTYPES_H" = "xyes"; then
+    inttypes="1"
+fi
+
+AC_SUBST(stdint)
+AC_SUBST(inttypes)
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(perror gettimeofday memset socket)
+
+AC_OUTPUT(Makefile zmq/Makefile zmq/stdint.hpp perf/Makefile \
+perf/tests/Makefile perf/tests/zmq/Makefile examples/Makefile \
+examples/exchange/Makefile examples/camera/Makefile perf/tests/tcp/Makefile \
+perf/helpers/Makefile examples/chat/Makefile)
+
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ ******************************************************** ])
+AC_MSG_RESULT([                         0MQ     ])
+AC_MSG_RESULT([ ******************************************************** ])
+AC_MSG_RESULT([  This software is distributed under the terms and ])
+AC_MSG_RESULT([  conditions of the GNU GENERAL PUBLIC LICENSE version 3. ])
+AC_MSG_RESULT([  See the file COPYING for the full license text. ])
+AC_MSG_RESULT([ ******************************************************** ])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ 0MQ install dir: $prefix])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ Utilities:])
+AC_MSG_RESULT([   cpu frequency estimator: $cpu_estimator])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ Addons:])
+AC_MSG_RESULT([   performance tests: $perf ($time_measure)]) 
+AC_MSG_RESULT([   camera example: $camera])
+AC_MSG_RESULT([   stock exchange example: $exchange])
+AC_MSG_RESULT([   chartoom example: $chat])
+AC_MSG_RESULT([])
+

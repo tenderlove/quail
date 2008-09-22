@@ -1,0 +1,7 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/quail
+lib/quail.rb
+test/test_quail.rb

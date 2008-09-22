@@ -1,0 +1,18 @@
+This directory contains a simple example of sending raw video from a webcam
+over 0MQ.
+
+To build the code you need to have the SDL development libraries
+(libsdl1.2-dev in Debian) and the Unicap library from
+http://www.unicap-imaging.org/ installed.
+
+The wire format for messages sent from sender to receiver is:
+<width, height, frame data>
+width:      uint32_t: frame width in pixels (network byte order)
+height:     uint32_t: frame height in pixels (network byte order)
+frame data: RGB24 frame data (R, G, B: 3 octets per pixel)
+
+TODO:
+
+- figure out why unicap sometimes fails to open the video device
+- figure out why ucil_convert_buffer sometimes fails
+- send patch to upstream to fix ucil.h for C++
