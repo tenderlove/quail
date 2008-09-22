@@ -22,7 +22,7 @@ namespace :build do
     end
   end
 
-  file EXT => ['vendor/lib/libzmq.a', 'ext/quail/Makefile'] do
+  task :ext => ['vendor/lib/libzmq.a', 'ext/quail/Makefile'] do
     Dir.chdir('ext/quail') do
       sh 'make'
     end
@@ -37,9 +37,9 @@ namespace :build do
     end
   end
 
-  task :all => [EXT]
 end
 
-task :build => ["build:all"]
+task :build => ["build:ext"]
+Rake::Task[:test].prerequisites << :build
 
 # vim: syntax=Ruby

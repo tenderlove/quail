@@ -7,4 +7,5 @@ void Init_native()
   rb_const_set(mQuail, rb_intern("GLOBAL"), INT2NUM(CZMQ_SCOPE_GLOBAL));
 
   Init_Quail_Handle(mQuail);
+  Init_Quail_Exchange(mQuail);
 }
