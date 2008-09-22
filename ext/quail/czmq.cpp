@@ -11,6 +11,7 @@
 #include <zmq/poll_thread.hpp>
 #include <zmq/api_thread.hpp>
 
+
 struct context_t
 {
     zmq::locator_t *locator;
@@ -119,4 +120,9 @@ void czmq_receive (void *obj_, void **data_, size_t *size_, czmq_free_fn **ffn_)
     *data_ = buf;
     *size_ = msg.size ();
     *ffn_ = free;   
+}
+
+void czmq_set_error_handler(error_handler_t func)
+{
+    zmq::set_error_handler(func);
 }
