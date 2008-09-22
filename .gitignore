@@ -1,7 +1,11 @@
 .*.swp
 *.tmproj
+*.o
+*.bundle
+*.log
 vendor/zmq-0.3/
 vendor/bin/
 vendor/include/
 vendor/lib/
+ext/quail/Makefile
 tags

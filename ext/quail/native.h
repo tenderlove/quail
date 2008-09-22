@@ -4,5 +4,6 @@
 #include <stdlib.h>
 #include <ruby.h>
 #include <czmq.h>
+#include <quail_handle.h>
 
 #endif
