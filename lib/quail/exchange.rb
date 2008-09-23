@@ -4,7 +4,7 @@ module Quail
 
     def initialize  handle,
                     exchange_name = 'E',
-                    scope = Quail::GLOBAL,
+                    scope = Quail::LOCAL,
                     address = '127.0.0.1:5555'
 
       raise unless handle.started?
