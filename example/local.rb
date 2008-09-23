@@ -1,6 +1,6 @@
 require 'quail'
 
-msg = "hello world"* 100
+msg = "hello world"
 Quail::Handle.start('localhost') do |handle|
   exchange = Quail::Exchange.new(handle, 'EL', Quail::LOCAL)
   queue = Quail::Queue.new(handle, 'QL', Quail::LOCAL)

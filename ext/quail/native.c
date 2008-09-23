@@ -2,7 +2,7 @@
 
 static bool awesome (const char *foo)
 {
-  return 0;
+  return false;
 }
 
 void Init_native()
