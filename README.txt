@@ -1,10 +1,10 @@
 = quail
 
-* FIX (url)
+* http://github.com/tenderlove/quail/tree/master
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Really fucking fast messaging in ruby.
 
 == FEATURES/PROBLEMS:
 

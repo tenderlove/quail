@@ -12,7 +12,7 @@ module Quail
       Quail::Handle.start('localhost') do |handle|
         exchange = Quail::Exchange.new(handle)
         queue = Quail::Queue.new(handle)
-        handle.bind(exchange.name, queue.name)
+        handle.bind(exchange.name => queue.name)
       end
     end
   end

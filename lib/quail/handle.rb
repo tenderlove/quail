@@ -29,9 +29,17 @@ module Quail
       @started = false
     end
 
-    def bind exchange, queue
+    ####
+    # Bind these +connections+
+    #   handle.bind(
+    #     'EXCHANGE_LOCAL' => 'QUEUE_GLOBAL',
+    #     'EXCHANGE_LOCAL' => 'QUEUE_GLOBAL',
+    #   )
+    def bind connections
       raise "not started" unless @started
-      native_bind(exchange, queue)
+      connections.each do |k,v|
+        native_bind(k, v)
+      end
     end
   end
 end
