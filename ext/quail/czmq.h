@@ -9,7 +9,7 @@ extern "C" {
 #define CZMQ_SCOPE_GLOBAL 1
 
 typedef void (czmq_free_fn) (void *data_);
-typedef int (error_handler_t) (const char *local_object_);
+typedef bool (error_handler_t) (const char *local_object_);
 
 void *czmq_create (const char *host_);
 void czmq_destroy (void *obj_);
