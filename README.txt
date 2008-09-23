@@ -1,32 +1,36 @@
-= quail
+= Quail
 
 * http://github.com/tenderlove/quail/tree/master
 
 == DESCRIPTION:
 
-Really fucking fast messaging in ruby.
+Really Fucking Fast Messaging in ruby.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+Don't forget to start vender/bin/zmq_server !
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
-
-== REQUIREMENTS:
-
-* FIX (list of requirements)
+  Quail::Handle.start('localhost') do |handle|
+    exchange  = Quail::Exchange.new(handle)
+    queue     = Quail::Queue.new(handle)
+            
+    handle.bind(exchange.name => queue.name)
+          
+    exchange.send 'Hello world'
+    puts queue.receive
+  end
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* sudo gem install quail
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2008 FIX
+Copyright (c) 2008 Aaron Patterson
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
