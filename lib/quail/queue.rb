@@ -8,9 +8,13 @@ module Quail
                     address = '127.0.0.1:5556'
 
       raise unless handle.started?
-      @handle = handle.handle
+      @handle = handle
       @name = name
-      create_queue(@handle, name, scope, address)
+      create_queue(handle.handle, name, scope, address)
+    end
+
+    def receive
+      @handle.receive
     end
   end
 end
