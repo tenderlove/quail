@@ -1,6 +1,6 @@
 module Quail
   class Exchange
-    attr_accessor :eid, :name
+    attr_accessor :eid, :name, :handle
 
     def initialize  handle,
                     exchange_name = 'E',

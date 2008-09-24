@@ -6,6 +6,7 @@ static VALUE native_bind(VALUE self, VALUE exchange_name, VALUE queue_name)
 
   Data_Get_Struct(rb_iv_get(self, "@handle"), void, handle);
   czmq_bind(handle, StringValuePtr(exchange_name), StringValuePtr(queue_name));
+  return self;
 }
 
 static VALUE destroy_handle(VALUE self)
@@ -14,6 +15,7 @@ static VALUE destroy_handle(VALUE self)
 
   Data_Get_Struct(rb_iv_get(self, "@handle"), void, handle);
   czmq_destroy(handle);
+  return self;
 }
 
 static VALUE create_handle(VALUE self, VALUE host)

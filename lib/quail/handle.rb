@@ -17,15 +17,18 @@ module Quail
       @started
     end
 
-    def start host = @host, &block
-      create_handle(host)
+    def start host = @host
+      create_handle(host) unless started?
       @started = true
-      block.call(self)
-      finish
+
+      if block_given?
+        yield self
+        finish
+      end
     end
 
     def finish
-      destroy_handle
+      destroy_handle if started?
       @started = false
     end
 

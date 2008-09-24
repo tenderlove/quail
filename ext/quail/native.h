@@ -6,5 +6,7 @@
 #include <ruby.h>
 #include <czmq.h>
 #include <quail_handle.h>
+#include <quail_queue.h>
+#include <quail_exchange.h>
 
 #endif

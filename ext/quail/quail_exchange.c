@@ -26,8 +26,8 @@ static VALUE send(VALUE self, VALUE message)
   void * handle;
 
   VALUE length  = rb_funcall(message, rb_intern("length"), 0);
-  VALUE rb_h    = rb_iv_get(self, "@handle");
-  VALUE eid     = rb_iv_get(self, "@eid");
+  VALUE rb_h    = rb_funcall(self, rb_intern("handle"), 0);
+  VALUE eid     = rb_funcall(self, rb_intern("eid"), 0);
   Data_Get_Struct(rb_h, void, handle);
   czmq_send(handle, NUM2INT(eid), StringValuePtr(message), NUM2INT(length), 0);
   return message;

@@ -16,8 +16,9 @@ static VALUE create_queue(  VALUE self,
   czmq_create_queue(  handle, 
                       StringValuePtr(name),
                       native_scope,
-                      StringValuePtr(address)
+                      chr_address
   );
+  return self;
 }
 
 void Init_Quail_Queue(VALUE mQuail)
